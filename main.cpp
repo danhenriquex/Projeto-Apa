@@ -17,6 +17,7 @@ class Gift {
 
     int id_;
     int weight_;
+    int idTreno_;
 };
 
 class Treno {
