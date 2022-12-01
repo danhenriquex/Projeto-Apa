@@ -9,6 +9,10 @@
 #include <vector>
 #include <list>
 #include <string>
+#include <queue>
+#include <stack>
+#include <ctime>
+#include <cstdlib>
 #include <bits/stdc++.h>
 
 class Treno {

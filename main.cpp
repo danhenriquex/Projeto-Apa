@@ -1,55 +1,46 @@
 
 
-#include "treno.h"
+#include "optmization.h"
 
 using namespace std;
-
-class Optimization {
-  public:
-    int totalGifts_;
-    int totalTrenos_;
-    int trenoCapacity_;
-    int elementsL_;
-    std::vector<Gift> allGifts_;
-};
 
 int main( void ) {
   auto readFile = []( const std::string& file ) {
     std::ifstream text(file);
+    std::string temp;
+    int item;
+    std::vector<int> infos;
 
-    Optimization opt = Optimization();
+    text >> temp;
 
-    bool isGift = true;
-    bool isTreno = false;
-    bool isCapacity = false;
+    for( int i = 0; i < 4; ++i ) {
+      text >> item;
 
-    if ( text.is_open() ) {
-      std::string value;
-
-      while( !text.eof() ) {
-        std::getline(text, value);
-
-        if ( isGift ) {
-          for ( int i = 1; i <= stoi(value); ++i ) {
-            Gift gift = Gift( i, -1 );
-            opt.allGifts_.push_back( gift );
-          }
-
-          isGift = false;
-          isTreno = true;
-        }
-
-        if ( isTreno ) {
-
-        }
-
-      }
+      infos.push_back( item ); 
     }
+
+    Optimization opt = Optimization( infos[0], infos[1], infos[2], infos[3] );
+
+    for( int i = 0; i < opt.totalGifts_; ++i ) {
+      text >> item;
+
+      Gift gift = Gift( i + 1, item );
+
+      opt.allGifts_.push_back( gift );
+    }
+
+    for( int i = 0; i < opt.totalElementsL_ * 2; ++i ) {
+      text >> item;
+
+      opt.notAllowedPresents_.push_back( item );
+    }
+
+    return opt;
   };
 
-  readFile("./instance.txt");
+  auto opt = readFile( "./instancias/instances/instance.txt" );
 
-  std::cout << "Initial commit" << std::endl;
-
+  opt.showPresents();
+  
   return 0;
 }
