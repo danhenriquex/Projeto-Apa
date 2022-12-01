@@ -1,30 +1,8 @@
-#include <iostream>
-#include <fstream>
-#include <vector>
-#include <list>
-#include <string>
-#include <bits/stdc++.h>
+
+
+#include "treno.h"
 
 using namespace std;
-
-class Gift {
-  public:
-    Gift( void ) {};
-    Gift( const int& id, const int& weight ) {
-      this->id_ = id;
-      this->weight_ = weight;
-    }
-
-    int id_;
-    int weight_;
-    int idTreno_;
-};
-
-class Treno {
-  public:
-    int capacity_;
-    std::vector<Gift> gifts_;
-};
 
 class Optimization {
   public:
