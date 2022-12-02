@@ -17,11 +17,6 @@ void Optimization::showPresents( void ) {
 int Optimization::heuristic( void ) { 
   this->sort();
 
-  for ( auto& gift : this->allGifts_ ) {
-    std::cout << "giftttttt: " << gift.weight_ << " iddddddddd: " << gift.id_ << std::endl;
-  }
-
-
   for ( auto& treno : this->allTrenos_ ) {
 
     for ( auto& gift : this->allGifts_ ) {
