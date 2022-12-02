@@ -13,9 +13,15 @@ class Optimization {
     int trenoCapacity_;
     int totalElementsL_;
     std::vector<Gift> allGifts_;
-    std::vector<int> notAllowedPresents_;
+    std::vector<Treno> allTrenos_;
+    std::list<int>* notAllowedPresents_;
+
+    int heuristic( void );
+    void papaiNoel( void );
+    void sort( void );
 
     void showPresents( void );
+    void showTrenoGifts( void );
 };
 
 #endif
