@@ -3,7 +3,7 @@
 #include "optmization.h"
 
 int main( void ) {
-  
+
   auto readFile = []( const std::string& file ) {
     std::ifstream text(file);
     std::string temp;
@@ -39,7 +39,6 @@ int main( void ) {
         previousIndex = item;
       }else {
 
-        std::cout << "previous: " << previousIndex << " item: " << item << std::endl;
         opt.notAllowedPresents_[previousIndex-1].push_back(item-1); 
         opt.notAllowedPresents_[item-1].push_back(previousIndex-1); 
 
