@@ -2,6 +2,8 @@
 
 #include "optmization.h"
 
+using namespace std;
+
 int main( void ) {
   auto readFile = []( const std::string& file ) {
     std::ifstream text(file);
@@ -22,7 +24,7 @@ int main( void ) {
     for ( int i = 0; i < opt.totalGifts_; ++i ) {
       text >> item;
 
-      Gift gift = Gift( i, item, false, -1 );
+      Gift gift = Gift( i + 1, item, false );
 
       opt.allGifts_.push_back( gift );
     }
@@ -30,20 +32,8 @@ int main( void ) {
     for ( int i = 0; i < opt.totalElementsL_ * 2; ++i ) {
       text >> item;
 
-      // std::cout << "mzr do item: " << item << std::endl;
-
-      // opt.notAllowedPresents_.push_back( item );
+      opt.notAllowedPresents_.push_back( item );
     }
-
-    // std::cout << "to morrendo aqui";
-    opt.notAllowedPresents_ = new std::list<int>[infos[3] * 2];
-
-    opt.notAllowedPresents_[0].push_back(1);
-    opt.notAllowedPresents_[0].push_back(3);
-    opt.notAllowedPresents_[1].push_back(0);
-    // opt.notAllowedPresents_[1].push_back(3);
-    opt.notAllowedPresents_[3].push_back(0);
-    // opt.notAllowedPresents_[3].push_back(1);
 
     for ( int i = 0; i < opt.totalTrenos_; ++i ) {
       Treno treno = Treno( i, opt.trenoCapacity_ );

@@ -14,7 +14,7 @@ class Optimization {
     int totalElementsL_;
     std::vector<Gift> allGifts_;
     std::vector<Treno> allTrenos_;
-    std::list<int>* notAllowedPresents_;
+    std::vector<int> notAllowedPresents_;
 
     int heuristic( void );
     void papaiNoel( void );

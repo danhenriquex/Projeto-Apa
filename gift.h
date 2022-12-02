@@ -4,11 +4,10 @@
 class Gift {
   public:
     Gift( void ) {};
-    Gift( const int& id, const int& weight, const bool& in, const int& idTreno ) {
+    Gift( const int& id, const int& weight, const bool& in ) {
       this->id_ = id;
       this->weight_ = weight;
       this->isIn_ = in;
-      this->idTreno_ = idTreno;
     }
 
     int id_;

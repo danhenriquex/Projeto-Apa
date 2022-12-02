@@ -17,82 +17,83 @@ void Optimization::showPresents( void ) {
 int Optimization::heuristic( void ) { 
   this->sort();
 
-  for ( auto& gift : this->allGifts_ ) {
+  for ( auto& treno : this->allTrenos_ ) {
 
-    for ( auto& treno : this->allTrenos_ ) {
+    for ( auto& gift : this->allGifts_ ) {
 
       if ( gift.isIn_ ) continue;
-        std::cout << "aaaa: " << gift.id_ << "allow: " << gift.idTreno_ << std::endl;
-      
+
       if ( treno.capacity_ >= gift.weight_ ) {
 
-        bool isNotAllowed = false;
+        if ( treno.gifts_.size() > 0 ) {
 
+          bool isNotAllowed = false;
 
-        for ( auto& value : this->notAllowedPresents_[gift.id_] ) {
+          for ( int i = 0; i < this->notAllowedPresents_.size(); ++i ) {
 
-          std::cout << "value: " << treno.id_ << "this value: " << this->allGifts_[value].idTreno_ << std::endl;
+            int notAllowedGift = 0;
 
-          if ( this->allGifts_[value-1].idTreno_ == treno.id_ ) {
+            if ( this->notAllowedPresents_[i] == gift.id_ ) {
 
-            isNotAllowed = true;
-            
+              if ( i % 2 == 0 ) {
+
+                notAllowedGift = this->notAllowedPresents_[i + 1];
+
+              }else {
+
+                notAllowedGift = this->notAllowedPresents_[i - 1];
+
+              }
+
+              for ( auto& trenoGifts : treno.gifts_ ) {
+
+                if ( trenoGifts.id_ == notAllowedGift ) {
+                  isNotAllowed = true;
+                }
+
+              }
+
+            }
           }
-          
+
+          if ( isNotAllowed ) continue;
+
         }
 
-        if ( !isNotAllowed ) {
-
-          gift.isIn_ = true;
-          gift.idTreno_ = treno.id_;
-          treno.capacity_ -= gift.weight_;
-          treno.gifts_.push_back( gift );
-          
-        }
+        gift.isIn_ = true;
+        treno.capacity_ -= gift.weight_;
+        treno.gifts_.push_back( gift );
+        gift.idTreno_ = treno.id_;
       }
     }
   }
 
-  // for ( auto& gift : this->allGifts_ ) {
+  for ( auto& gift : this->allGifts_ ) {
 
-  //   std::cout << gift.id_ << " " << gift.weight_ << " treno que eu tou " << gift.idTreno_ << std::endl;
+    if ( !gift.isIn_ ) {
 
-  // }
+      Treno aux = this->allTrenos_[this->allTrenos_.size() - 1];
 
-  // for ( auto& treno : this->allTrenos_ ) {
-  //   std::cout << "Treno: " << treno.id_ << std::endl;
+      if ( aux.capacity_ >= gift.weight_ ) {
 
-  //   for ( auto& gift : treno.gifts_ ) {
-  //     std::cout << "id: " << gift.id_ << " weight: " << gift.weight_ << "trenoId: " << gift.idTreno_ << std::endl;
-  //   }
-  // }
+        gift.isIn_ = true;
+        this->allTrenos_[this->allTrenos_.size() - 1].capacity_ -= gift.weight_;
+        this->allTrenos_[this->allTrenos_.size() - 1].gifts_.push_back( gift );
+        
+        continue;
+      }
+
+      Treno treno = Treno( this->allTrenos_.size() + 1, this->trenoCapacity_ );
+
+      gift.isIn_ = true;
+      treno.capacity_ -= gift.weight_;
+      treno.gifts_.push_back( gift );
+
+      this->allTrenos_.push_back( treno );
+    }
+  }
 
   this->showTrenoGifts();
-
-  // for ( auto& gift : this->allGifts_ ) {
-
-  //   if ( !gift.isIn_ ) {
-
-  //     Treno aux = this->allTrenos_[this->allTrenos_.size() - 1];
-
-  //     if ( aux.capacity_ >= gift.weight_ ) {
-
-  //       gift.isIn_ = true;
-  //       this->allTrenos_[this->allTrenos_.size() - 1].capacity_ -= gift.weight_;
-  //       this->allTrenos_[this->allTrenos_.size() - 1].gifts_.push_back( gift );
-        
-  //       continue;
-  //     }
-
-  //     Treno treno = Treno( this->allTrenos_.size() + 1, this->trenoCapacity_ );
-
-  //     gift.isIn_ = true;
-  //     treno.capacity_ -= gift.weight_;
-  //     treno.gifts_.push_back( gift );
-
-  //     this->allTrenos_.push_back( treno );
-  //   }
-  // }
 
   return this->allTrenos_.size();
 }
