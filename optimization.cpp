@@ -83,3 +83,15 @@ void Optimization::showTrenoGifts( void ) {
     }
   }
 }
+
+void Optimization::swap_gifts( void ) {
+  // select a two random treno
+  int trenoId = rand() % this->allTrenos_.size();
+  int trenoId2 = rand() % this->allTrenos_.size();
+
+  // select a two random gift
+  int giftId = rand() % this->allTrenos_[trenoId].gifts_.size();
+  int giftId2 = rand() % this->allTrenos_[trenoId2].gifts_.size();
+
+  cout << this->allTrenos_[trenoId];
+}

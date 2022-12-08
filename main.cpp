@@ -60,6 +60,8 @@ int main( void ) {
   auto opt = readFile( "./instancias/instances/instance.txt" );
 
   opt.papaiNoel();
+
+  opt.swap_gifts();
   
   return 0;
 }

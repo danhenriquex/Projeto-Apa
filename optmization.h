@@ -22,6 +22,8 @@ class Optimization {
 
     void showPresents( void );
     void showTrenoGifts( void );
+
+    void swap_gifts( void );
 };
 
 #endif
