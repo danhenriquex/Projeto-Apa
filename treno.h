@@ -27,7 +27,7 @@ public:
   int id_;
   std::vector<Gift> gifts_;
 
-  void add_gift(const Gift &gift)
+  void add_gift( Gift &gift )
   {
 
     if (this->capacity_ < gift.weight_)
@@ -35,6 +35,8 @@ public:
 
     this->gifts_.push_back(gift);
     this->capacity_ -= gift.weight_;
+
+    gift.idTreno_ = this->id_;
   }
 
   void remove_gift(const Gift &gift)
@@ -66,7 +68,7 @@ public:
     {
       os << treno.gifts_[i].id_ << " ";
     }
-    os << std::endl;
+    os << std::endl << std::endl;
     return os;
   }
 };

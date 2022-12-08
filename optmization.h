@@ -24,6 +24,10 @@ class Optimization {
     void showTrenoGifts( void );
 
     void swap_gifts( void );
+
+  private:
+    Treno get_treno_to_swap( void );
+    Gift get_gift_to_swap( Treno treno1, Treno treno2 );
 };
 
 #endif

@@ -85,13 +85,87 @@ void Optimization::showTrenoGifts( void ) {
 }
 
 void Optimization::swap_gifts( void ) {
-  // select a two random treno
+  // cout << this->allTrenos_[trenoId];]
+  // std::cout << "Depois do swap: " << std::endl;
+  // for (auto& treno : trenoToSwap) {
+  //   std::cout << treno;
+  // }
+
+  // select a random gift
+  Gift gift1 = this->allGifts_[rand() % this->allGifts_.size()];
+  Gift gift2 = this->allGifts_[rand() % this->allGifts_.size()];
+
+  do {
+    gift2 = this->allGifts_[rand() % this->allGifts_.size()];
+  } while ( gift1.id_ == gift2.id_ || !gift2.isIn_);
+
+  // verify if the gift is allowed to be swapped
+  for ( auto& value : this->notAllowedPresents_[gift1.id_] ) {
+    if ( this->allGifts_[value].idTreno_ == gift2.idTreno_ ) {
+      // choose another gift
+      gift2 = this->allGifts_[rand() % this->allGifts_.size()];
+    }
+  }
+
+  Treno treno1 = this->allTrenos_[gift1.idTreno_];
+  Treno treno2 = this->allTrenos_[gift2.idTreno_];
+
+  bool treno1IsAbleToSwap = treno1.capacity_ - gift1.weight_ + gift2.weight_ >= 0;
+  bool treno2IsAbleToSwap = treno2.capacity_ - gift2.weight_ + gift1.weight_ >= 0;
+
+  std::cout << "Antes do swap" << std::endl;
+  std::cout << treno1;
+  std::cout << treno2;
+
+  // std::cout << "Gifts" << std::endl;
+  // std::cout << gift1;
+  // std::cout << gift2;
+
+  if (treno1IsAbleToSwap && treno2IsAbleToSwap) {
+
+    treno1.remove_gift(gift1);
+    treno2.remove_gift(gift2);
+
+    treno1.add_gift(gift2);
+    treno2.add_gift(gift1);
+  }
+
+  std::cout << "Depois do swap" << std::endl;
+  std::cout << treno1;
+  std::cout << treno2;
+
+  // std::cout << "Gifts" << std::endl;
+  // std::cout << gift1;
+  // std::cout << gift2;
+
+  // verificar se o presente pode ser colocado no treno
+  // std::cout << treno1;
+  // std::cout << treno2;
+
+
+  // std::cout << gift1;
+  // std::cout << gift2;
+
+}
+
+Treno Optimization::get_treno_to_swap( void ) {
   int trenoId = rand() % this->allTrenos_.size();
-  int trenoId2 = rand() % this->allTrenos_.size();
+  
+  return this->allTrenos_[trenoId];
+}
 
-  // select a two random gift
-  int giftId = rand() % this->allTrenos_[trenoId].gifts_.size();
-  int giftId2 = rand() % this->allTrenos_[trenoId2].gifts_.size();
+Gift Optimization::get_gift_to_swap( Treno treno1, Treno treno2 ) {
+  int giftId = rand() % treno1.gifts_.size();
 
-  cout << this->allTrenos_[trenoId];
+  Gift gift = treno1.gifts_[giftId];
+
+  // verify if the gift is allowed to be swapped
+  for ( auto& value : this->notAllowedPresents_[gift.id_] ) {
+    if ( this->allGifts_[value].idTreno_ == treno2.id_ ) {
+      giftId = rand() % treno1.gifts_.size();
+      gift = treno1.gifts_[giftId];
+    }
+  }
+ 
+  return this->allGifts_[giftId];
 }
