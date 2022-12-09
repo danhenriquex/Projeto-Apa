@@ -45,7 +45,33 @@ int Optimization::heuristic( void ) {
         treno.capacity_ = treno.capacity_ - this->allGifts_[this->allGiftsSortedIndex_[i]].weight_;
 
       }else{
-        
+        if(treno.capacity_ >= this->allGifts_[this->allGiftsSortedIndex_[i]].weight_ && this->allGifts_[this->allGiftsSortedIndex_[i]].idTreno_ == -1){
+          bool allowed = true;
+          for ( auto& giftCheck : treno.gifts_){
+            for (auto& j : this->allGifts_[giftCheck].notAllowedPresents_ ){
+              if(j == this->allGifts_[this->allGiftsSortedIndex_[i]].id_){
+                allowed = false;
+              }
+            }
+          }
+          if(allowed){
+            this->allGifts_[this->allGiftsSortedIndex_[i]].idTreno_ = treno.id_;
+            treno.gifts_.push_back(this->allGifts_[this->allGiftsSortedIndex_[i]].id_);
+            treno.capacity_ = treno.capacity_ - this->allGifts_[this->allGiftsSortedIndex_[i]].weight_;
+          }else{
+            if(treno.id_ == (this->totalTrenos_ - 1)){
+              Treno newTreno = Treno( this->totalTrenos_, this->trenoCapacity_ );
+              
+
+              this->allGifts_[this->allGiftsSortedIndex_[i]].idTreno_ = newTreno.id_;
+              newTreno.gifts_.push_back(this->allGifts_[this->allGiftsSortedIndex_[i]].id_);
+              newTreno.capacity_ = newTreno.capacity_ - this->allGifts_[this->allGiftsSortedIndex_[i]].weight_;
+
+              this->allTrenos_.push_back( newTreno );
+              this->totalTrenos_ = this->totalTrenos_ + 1;
+            }
+          }
+        }
       }
     }
   

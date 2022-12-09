@@ -51,11 +51,9 @@ int main( void ) {
     return opt;
   };
 
-  auto opt = readFile( "./instancias/instances/instance.txt" );
+  auto opt = readFile( "./instancias/instances/n30_k150_A.txt" );
 
   opt.papaiNoel();
-
-  opt.showSortedPresents();
 
   opt.showTrenoGifts();
   
