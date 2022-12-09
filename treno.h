@@ -21,10 +21,10 @@ class Treno {
   public:
     Treno( void );
     Treno( const int& id, const int& capacity ) : id_(id), capacity_(capacity) {};
-
+    
     int capacity_;
     int id_;
-    std::vector<Gift> gifts_;
+    std::vector<int> gifts_;
 };
 
 #endif

@@ -12,16 +12,18 @@ class Optimization {
     int totalTrenos_;
     int trenoCapacity_;
     int totalElementsL_;
+    int* allGiftsSortedIndex_;
+
     std::vector<Gift> allGifts_;
     std::vector<Treno> allTrenos_;
-    std::list<int>* notAllowedPresents_;
 
     int heuristic( void );
     void papaiNoel( void );
-    void sort( void );
-
     void showPresents( void );
     void showTrenoGifts( void );
+    void showSortedPresents( void );
+
+    void QuickSort(int inicio, int fim);
 };
 
 #endif

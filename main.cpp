@@ -19,8 +19,9 @@ int main( void ) {
     }
 
     Optimization opt = Optimization( infos[0], infos[1], infos[2], infos[3] );
-
     for ( int i = 0; i < opt.totalGifts_; ++i ) {
+      opt.allGiftsSortedIndex_[i] = i;
+
       text >> item;
 
       Gift gift = Gift( i, item, false, -1 );
@@ -28,23 +29,16 @@ int main( void ) {
       opt.allGifts_.push_back( gift );
     }
 
-    opt.notAllowedPresents_ = new std::list<int>[infos[3] * 2];
-    int previousIndex = 0;
+    int item1;
+    int item2;
+    for ( int i = 0; i < opt.totalElementsL_; ++i ) {
+      text >> item1;
+      text >> item2;
 
+      opt.allGifts_[item1-1].notAllowedPresents_.push_back(item2-1); 
+      opt.allGifts_[item2-1].notAllowedPresents_.push_back(item1-1); 
 
-    for ( int i = 0; i < opt.totalElementsL_ * 2; ++i ) {
-      text >> item;
-
-      if ( i % 2 == 0 ) {
-        previousIndex = item;
-      }else {
-
-        opt.notAllowedPresents_[previousIndex-1].push_back(item-1); 
-        opt.notAllowedPresents_[item-1].push_back(previousIndex-1); 
-
-      }
     }
-
 
     for ( int i = 0; i < opt.totalTrenos_; ++i ) {
 
@@ -60,6 +54,10 @@ int main( void ) {
   auto opt = readFile( "./instancias/instances/instance.txt" );
 
   opt.papaiNoel();
+
+  opt.showSortedPresents();
+
+  opt.showTrenoGifts();
   
   return 0;
 }
