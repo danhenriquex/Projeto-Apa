@@ -1,5 +1,7 @@
 #ifndef GIFT_H
 #define GIFT_H
+#include <vector>
+
 
 class Gift {
   public:
@@ -11,6 +13,7 @@ class Gift {
       this->idTreno_ = idTreno;
     }
 
+    std::vector<int> notAllowedPresents_;
     int id_;
     int weight_;
     int idTreno_;
