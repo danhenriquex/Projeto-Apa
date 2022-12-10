@@ -5,71 +5,81 @@ Optimization::Optimization(void) {
 }
 
 Optimization::Optimization(const int& totalGifts, const int& totalTrenos, const int& trenoCapacity, const int& totalElementsL):
-  totalGifts_(totalGifts), trenoCapacity_(trenoCapacity), totalTrenos_(totalTrenos), totalElementsL_(totalElementsL) {}
+  totalGifts_(totalGifts), trenoCapacity_(trenoCapacity), totalTrenos_(totalTrenos), totalElementsL_(totalElementsL) {
+  this->allGiftsSortedIndex_ = new int[this->totalGifts_];
+}
 
 
 void Optimization::showPresents(void) {
   for (auto& obj : this->allGifts_) {
     std::cout << "id: " << obj.id_ << " weight: " << obj.weight_ << std::endl;
+    for (auto& gift : obj.notAllowedPresents_) {
+      std::cout << gift << ", ";
+    }
+    std::cout << std::endl;
+
+  }
+}
+
+void Optimization::showSortedPresents(void) {
+  for (int i = 0; i < this->totalGifts_; i++) {
+    std::cout << "id: " << this->allGifts_[this->allGiftsSortedIndex_[i]].id_ << " weight: " << this->allGifts_[this->allGiftsSortedIndex_[i]].weight_ << std::endl;
+    for (auto& gift : this->allGifts_[this->allGiftsSortedIndex_[i]].notAllowedPresents_) {
+      std::cout << gift << ", ";
+    }
+    std::cout << std::endl;
+
   }
 }
 
 int Optimization::heuristic(void) {
-  this->sort();
+  this->QuickSort(0, this->totalGifts_ - 1);
 
-  for (auto& treno : this->allTrenos_) {
+  for (int i = 0; i < this->totalGifts_; i++) {
+    for (auto& treno : this->allTrenos_) {
 
-    for (auto& gift : this->allGifts_) {
+      if (treno.gifts_.empty() && this->allGifts_[this->allGiftsSortedIndex_[i]].idTreno_ == -1) {
 
-      if (gift.isIn_) continue;
+        this->allGifts_[this->allGiftsSortedIndex_[i]].idTreno_ = treno.id_;
+        treno.gifts_.push_back(this->allGifts_[this->allGiftsSortedIndex_[i]].id_);
+        treno.capacity_ = treno.capacity_ - this->allGifts_[this->allGiftsSortedIndex_[i]].weight_;
 
-      if (treno.capacity_ >= gift.weight_) {
-
-        bool isNotAllowed = false;
-
-        for (auto& value : this->notAllowedPresents_[gift.id_]) {
-
-          if (this->allGifts_[value].idTreno_ == treno.id_) {
-
-            isNotAllowed = true;
-
-          }
-          else {
-
-            for (int i = 0; i < this->allGifts_.size(); ++i) {
-
-              if (this->allGifts_[i].id_ == value) {
-
-                this->allGifts_[i].idTreno_ = treno.id_;
-
+      }
+      else {
+        if (treno.capacity_ >= this->allGifts_[this->allGiftsSortedIndex_[i]].weight_ && this->allGifts_[this->allGiftsSortedIndex_[i]].idTreno_ == -1) {
+          bool allowed = true;
+          for (auto& giftCheck : treno.gifts_) {
+            for (auto& j : this->allGifts_[giftCheck].notAllowedPresents_) {
+              if (j == this->allGifts_[this->allGiftsSortedIndex_[i]].id_) {
+                allowed = false;
               }
             }
           }
-        }
+          if (allowed) {
+            this->allGifts_[this->allGiftsSortedIndex_[i]].idTreno_ = treno.id_;
+            treno.gifts_.push_back(this->allGifts_[this->allGiftsSortedIndex_[i]].id_);
+            treno.capacity_ = treno.capacity_ - this->allGifts_[this->allGiftsSortedIndex_[i]].weight_;
+          }
+          else {
+            if (treno.id_ == (this->totalTrenos_ - 1)) {
+              Treno newTreno = Treno(this->totalTrenos_, this->trenoCapacity_);
 
-        if (!isNotAllowed) {
 
-          gift.isIn_ = true;
-          gift.idTreno_ = treno.id_;
-          treno.capacity_ -= gift.weight_;
-          treno.gifts_.push_back(gift);
+              this->allGifts_[this->allGiftsSortedIndex_[i]].idTreno_ = newTreno.id_;
+              newTreno.gifts_.push_back(this->allGifts_[this->allGiftsSortedIndex_[i]].id_);
+              newTreno.capacity_ = newTreno.capacity_ - this->allGifts_[this->allGiftsSortedIndex_[i]].weight_;
 
+              this->allTrenos_.push_back(newTreno);
+              this->totalTrenos_ = this->totalTrenos_ + 1;
+            }
+          }
         }
       }
     }
+
   }
+  return 0;
 
-  this->showTrenoGifts();
-
-  std::cout << "initial solution: " << this->allTrenos_.size() << std::endl;;
-
-  return this->allTrenos_.size();
-}
-
-void Optimization::sort(void) {
-  std::sort(this->allGifts_.begin(), this->allGifts_.end(), [](const Gift& a, const Gift& b) {
-    return a.weight_ < b.weight_;
-    });
 }
 
 void Optimization::papaiNoel(void) {
@@ -80,28 +90,28 @@ void Optimization::showTrenoGifts(void) {
   for (auto& treno : this->allTrenos_) {
     std::cout << "treno " << treno.id_ << std::endl;
     for (auto& gift : treno.gifts_) {
-      std::cout << "gift: " << gift.id_ << " peso: " << gift.weight_ << std::endl;
+      std::cout << "gift: " << this->allGifts_[gift].id_ << " peso: " << this->allGifts_[gift].weight_ << std::endl;
     }
   }
 }
 
 using namespace std;
 
-bool Optimization::swap_gifts(void) {
+list<Treno> Optimization::swap_gifts(void) {
 
 
   Treno& treno1 = this->allTrenos_[rand() % this->allTrenos_.size()];
   Treno& treno2 = this->allTrenos_[rand() % this->allTrenos_.size()];
 
-  Gift gift1 = treno1.gifts_[rand() % treno1.gifts_.size()];
+  Gift gift1 = this->allGifts_[treno1.gifts_[rand() % treno1.gifts_.size()]];
   Gift gift2;
 
-  list<int> notAllowedPresents = this->notAllowedPresents_[gift1.id_];
+  vector<int> notAllowedPresents = gift1.notAllowedPresents_;
 
   for (auto& gift : treno2.gifts_) {
     for (auto& value : notAllowedPresents) {
-      if (gift.id_ == value) {
-        gift2 = gift;
+      if (this->allGifts_[gift].id_ == value) {
+        gift2 = this->allGifts_[gift];
       }
     }
   }
@@ -112,35 +122,48 @@ bool Optimization::swap_gifts(void) {
   bool treno1Capacity = treno1.capacity_ - gift2.weight_ >= 0;
   bool treno2Capacity = treno2.capacity_ - gift1.weight_ >= 0;
 
+
   if (treno1Capacity && treno2Capacity) {
 
     treno1.add_gift(gift2);
     treno2.add_gift(gift1);
 
-    return true;
+    return { treno1, treno2 };
 
   }
-  else {
 
-    treno1.add_gift(gift1);
-    treno2.add_gift(gift2);
+  treno1.add_gift(gift1);
+  treno2.add_gift(gift2);
 
-    return false;
-
-  }
+  return this->swap_gifts();
 
 }
 
-bool Optimization::gifts_can_to_be_together(const Gift& gift1, const Gift& gift2) {
+void Optimization::QuickSort(int inicio, int fim) {
 
-  for (auto& value : this->notAllowedPresents_[gift1.id_]) {
+  int i, j, pivo, aux;
+  if (inicio < fim) {
+    pivo = this->allGifts_[this->allGiftsSortedIndex_[inicio]].weight_;
+    i = inicio;
+    j = fim;
 
-    if (value == gift2.id_) {
+    while (i < j) {
+      while (this->allGifts_[this->allGiftsSortedIndex_[i]].weight_ <= pivo && i < fim)
+        i++;
+      while (this->allGifts_[this->allGiftsSortedIndex_[j]].weight_ > pivo)
+        j--;
 
-      return false;
-
+      if (i < j) {
+        aux = this->allGiftsSortedIndex_[i];
+        this->allGiftsSortedIndex_[i] = this->allGiftsSortedIndex_[j];
+        this->allGiftsSortedIndex_[j] = aux;
+      }
     }
-  }
+    aux = this->allGiftsSortedIndex_[inicio];
+    this->allGiftsSortedIndex_[inicio] = this->allGiftsSortedIndex_[j];
+    this->allGiftsSortedIndex_[j] = aux;
+    this->QuickSort(inicio, j - 1);
+    this->QuickSort(j + 1, fim);
 
-  return true;
+  }
 }

@@ -25,7 +25,7 @@ public:
 
   int capacity_;
   int id_;
-  std::vector<Gift> gifts_;
+  std::vector<int> gifts_;
 
   void add_gift(Gift& gift)
   {
@@ -33,7 +33,7 @@ public:
     if (this->capacity_ < gift.weight_)
       return;
 
-    this->gifts_.push_back(gift);
+    this->gifts_.push_back(gift.id_);
     this->capacity_ -= gift.weight_;
 
     gift.idTreno_ = this->id_;
@@ -46,7 +46,7 @@ public:
     for (int i = 0; i < this->gifts_.size(); ++i)
     {
 
-      if (this->gifts_[i].id_ == gift.id_)
+      if (this->gifts_[i] == gift.id_)
       {
 
         this->gifts_.erase(this->gifts_.begin() + i);
@@ -69,7 +69,7 @@ public:
     os << "Presentes: " << std::endl;
     for (int i = 0; i < treno.gifts_.size(); ++i)
     {
-      os << treno.gifts_[i].id_ << " ";
+      os << treno.gifts_[i] << " ";
     }
     os << std::endl << std::endl;
     return os;

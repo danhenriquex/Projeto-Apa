@@ -12,24 +12,19 @@ public:
   int totalTrenos_;
   int trenoCapacity_;
   int totalElementsL_;
+  int* allGiftsSortedIndex_;
+
   std::vector<Gift> allGifts_;
   std::vector<Treno> allTrenos_;
-  std::list<int>* notAllowedPresents_;
 
   int heuristic(void);
   void papaiNoel(void);
-  void sort(void);
-
   void showPresents(void);
   void showTrenoGifts(void);
+  void showSortedPresents(void);
 
-  bool swap_gifts(void);
-
-
-private:
-  Treno get_treno_to_swap(void);
-  Gift get_gift_to_swap(Treno treno1, Treno treno2);
-  bool gifts_can_to_be_together(const Gift& gift1, const Gift& gift2);
+  void QuickSort(int inicio, int fim);
+  list<Treno> swap_gifts(void);
 };
 
 #endif

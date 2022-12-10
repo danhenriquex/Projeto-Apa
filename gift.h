@@ -1,5 +1,7 @@
 #ifndef GIFT_H
 #define GIFT_H
+#include <vector>
+
 
 #include <iostream>
 
@@ -13,6 +15,7 @@ public:
     this->idTreno_ = idTreno;
   }
 
+  std::vector<int> notAllowedPresents_;
   int id_;
   int weight_;
   int idTreno_;
@@ -30,6 +33,7 @@ public:
   friend bool operator==(const Gift& a, const Gift& b) {
     return a.id_ == b.id_ && a.weight_ == b.weight_ && a.isIn_ == b.isIn_ && a.idTreno_ == b.idTreno_;
   }
+
 };
 
 #endif
