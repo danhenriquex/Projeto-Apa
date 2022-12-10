@@ -78,6 +78,18 @@ int Optimization::heuristic(void) {
     }
 
   }
+
+  int l = 0;
+
+  while ( l < this->allTrenos_.size() ) {
+    if ( this->allTrenos_[l].gifts_.size() == 0 ) {
+      this->allTrenos_.erase( this->allTrenos_.begin() + l );
+      l = 0;
+      continue;
+    }
+    l++;
+  }
+
   return 0;
 
 }
@@ -166,4 +178,69 @@ void Optimization::QuickSort(int inicio, int fim) {
     this->QuickSort(j + 1, fim);
 
   }
+}
+
+void Optimization::mergeTrenos( void ) {
+
+  for ( int i = 0; i < this->allTrenos_.size(); ++i ) {
+
+    for ( int j = 0; j < this->allTrenos_.size(); ++j ) {
+      
+      if ( i == j ) continue;
+
+      const int treno1Capacity = this->trenoCapacity_ - this->allTrenos_[i].capacity_;
+      const int treno2Capacity = this->trenoCapacity_ - this->allTrenos_[j].capacity_;
+      const int trenoSum = treno1Capacity + treno2Capacity;
+      bool allowed = false;
+
+      if ( trenoSum <= this->trenoCapacity_ ) {
+        allowed = true;
+        for ( auto& gift1 : this->allTrenos_[i].gifts_ ) {
+          for ( auto& gift2 : this->allTrenos_[j].gifts_ ) {
+            for ( auto& notAllowed : this->allGifts_[gift1].notAllowedPresents_ ) {
+              if ( notAllowed == this->allGifts_[gift2].id_ ) {
+                allowed = false;
+              }
+            }
+          }
+        }
+
+        // todo: 1-10 / 2-1
+
+        if ( allowed ) {
+          for ( auto& gift : this->allTrenos_[j].gifts_ ) {
+            this->allTrenos_[i].add_gift( this->allGifts_[gift] );
+         }
+
+
+
+         int value = this->allTrenos_[j].gifts_.size();
+
+         for ( int k = 0; k < value; ++k ) {
+            this->allTrenos_[j].gifts_.pop_back(); 
+         }
+        }
+      }
+      }
+
+     
+  }
+
+  int l = 0;
+
+  while ( l < this->allTrenos_.size() ) {
+    if ( this->allTrenos_[l].gifts_.size() == 0 ) {
+      this->allTrenos_.erase( this->allTrenos_.begin() + l );
+      l = 0;
+      continue;
+    }
+    l++;
+  }
+
+  // for ( int i = 0; i < this->allTrenos_.size(); ++i ) {
+  //   if ( this->allTrenos_[i].gifts_.size() == 0 ) {
+  //     this->allTrenos_.erase( this->allTrenos_.begin() + i );
+  //   }
+  // }
+
 }

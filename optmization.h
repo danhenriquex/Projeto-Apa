@@ -22,9 +22,11 @@ public:
   void showPresents(void);
   void showTrenoGifts(void);
   void showSortedPresents(void);
+  
 
   void QuickSort(int inicio, int fim);
   list<Treno> swap_gifts(void);
+  void mergeTrenos( void );
 };
 
 #endif

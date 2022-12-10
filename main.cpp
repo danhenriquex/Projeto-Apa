@@ -53,15 +53,34 @@ int main(void) {
     return opt;
   };
 
-  auto opt = readFile("./instancias/instances/instance.txt");
+  auto opt = readFile("./instancias/instances/n30_k150_B.txt");
 
   opt.papaiNoel();
 
-  list<Treno> treno_swapped = opt.swap_gifts();
+  for ( const auto& treno : opt.allTrenos_ ) {
+    std::cout << treno;
+  }
 
-  for (auto& treno : treno_swapped) {
-    cout << treno;
-  };
+  printf("\n==================================================================\n");
+
+  // list<Treno> treno_swapped = opt.swap_gifts();
+
+  // for (auto& treno : treno_swapped) {
+  //   cout << treno;
+  // };
+
+  std::cout << "trenos: " << opt.allTrenos_.size() << std::endl;
+
+  opt.mergeTrenos();
+  // opt.mergeTrenos();
+  // opt.showTrenoGifts();
+
+  for ( const auto& treno : opt.allTrenos_ ) {
+    std::cout << treno;
+  }
+
+  std::cout << "trenos: " << opt.allTrenos_.size() << std::endl;
 
   return 0;
 }
+

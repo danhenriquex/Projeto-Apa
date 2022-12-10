@@ -74,6 +74,11 @@ public:
     os << std::endl << std::endl;
     return os;
   }
+
+  friend bool operator==(const Treno& a, const Treno& b)
+  {
+    return a.id_ == b.id_ && a.capacity_ == b.capacity_ && a.gifts_ == b.gifts_;
+  }
 };
 
 #endif
