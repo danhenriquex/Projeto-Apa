@@ -53,15 +53,28 @@ int main(void) {
     return opt;
   };
 
-  auto opt = readFile("./instancias/instances/instance.txt");
+  auto opt = readFile("./instancias/instances/n30_k150_A.txt");
 
   opt.papaiNoel();
 
-  list<Treno> treno_swapped = opt.swap_gifts();
+  cout << "Quantidade de trenos inicial: " << opt.allTrenos_.size() << endl;
+  int inital_size = opt.allTrenos_.size();
+  int first_reinsertion = opt.reinsertion();
 
-  for (auto& treno : treno_swapped) {
+  while (true) {
+    inital_size = first_reinsertion;
+    first_reinsertion = opt.reinsertion();
+
+    if (inital_size == first_reinsertion) {
+      break;
+    }
+  }
+
+  for (auto& treno : opt.allTrenos_) {
     cout << treno;
-  };
+  }
+
+  cout << "Quantidade de trenos depois do re-insertion: " << opt.allTrenos_.size() << endl;
 
   return 0;
 }

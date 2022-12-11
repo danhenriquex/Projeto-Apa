@@ -62,17 +62,30 @@ public:
     return this->capacity_;
   }
 
+  bool is_full(void) {
+    return this->capacity_ == 0;
+  }
+
+  bool is_empty(void) {
+    return this->gifts_.size() == 0;
+  }
+
   // overload operator << to print the sled
-  friend std::ostream& operator<<(std::ostream& os, const Treno& treno)
+  friend std::ostream& operator<<(std::ostream& os, Treno& treno)
   {
     os << "Treno " << treno.id_ << " (capacity: " << treno.capacity_ << ")" << std::endl;
     os << "Presentes: " << std::endl;
     for (int i = 0; i < treno.gifts_.size(); ++i)
     {
-      os << treno.gifts_[i] << " ";
+      os << treno.gifts_[i] + 1 << " ";
     }
     os << std::endl << std::endl;
     return os;
+  }
+
+  friend bool operator==(const Treno& a, const Treno& b)
+  {
+    return a.id_ == b.id_ && a.capacity_ == b.capacity_;
   }
 };
 
