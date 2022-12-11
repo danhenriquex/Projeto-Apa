@@ -55,14 +55,49 @@ int main(void) {
 
   auto opt = readFile("./instancias/instances/n30_k150_A.txt");
 
-  // opt.papaiNoel();
-  cout << "Trenos: " << opt.allTrenos_.size() << endl;
+  // save the initial value of trenos
+  int initial_trenos = opt.allTrenos_.size();
+
+  auto startH = chrono::high_resolution_clock::now();
+
+  int solucaoHeuristica = opt.heuristic();
+
+
+  auto finishH = chrono::high_resolution_clock::now();
+
+  chrono::duration<double> elapsedH = finishH - startH;
+
+  cout << "Heuristica" << endl;
+  cout << "Tempo de execução: " << elapsedH.count() * 1000 << " ms\n";
+  cout << "Quantidade de trenos iniciais: " << initial_trenos << endl;
+  cout << "Quantidade de trenos após o algortimo: " << solucaoHeuristica << endl;
+
+  auto startVND = chrono::high_resolution_clock::now();
+
+  int solutionVND = opt.vnd();
+
+  auto finishVND = chrono::high_resolution_clock::now();
+
+  chrono::duration<double> elapsedVND = finishVND - startVND;
+
+  cout << endl << "VND" << endl;
+  cout << "Tempo de execução: " << elapsedVND.count() * 1000 << " ms\n";
+  cout << "Quantidade de trenos iniciais: " << initial_trenos << endl;
+  cout << "Quantidade de trenos após o algortimo: " << solutionVND << endl;
+
+
+  auto start = chrono::high_resolution_clock::now();
+
   int solution = opt.ils();
 
-  for (auto& treno : opt.allTrenos_) {
-    cout << treno;
-  }
-  cout << "Trenos: " << solution << endl;
+  auto finish = chrono::high_resolution_clock::now();
+
+  chrono::duration<double> elapsed = finish - start;
+
+  cout << endl << "ILS" << endl;
+  cout << "Tempo de execução: " << elapsed.count() * 1000 << " ms\n";
+  cout << "Quantidade de trenos iniciais: " << initial_trenos << endl;
+  cout << "Quantidade de trenos após o algortimo: " << solution << endl;
 
   return 0;
 

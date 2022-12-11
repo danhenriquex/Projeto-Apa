@@ -80,7 +80,10 @@ int Optimization::heuristic(void) {
     }
 
   }
-  return 0;
+
+  this->removeAllTrenosEmpty();
+
+  return this->allTrenos_.size();
 
 }
 
@@ -349,7 +352,7 @@ int Optimization::ils(void) {
   int best = this->allTrenos_.size();
   int current = best;
 
-  for (int i = 0; i < 25000; ++i) {
+  for (int i = 0; i < 20000; ++i) {
 
     current = this->vnd();
 
