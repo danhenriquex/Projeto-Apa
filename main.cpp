@@ -53,16 +53,13 @@ int main(void) {
     return opt;
   };
 
-  auto opt = readFile("./instancias/instances/n30_k150_A.txt");
+  // auto opt = readFile("./instancias/instances/n60_k130_A.txt");
+  auto opt = readFile("./instancias/instancias_grandes/n1000_k200_A.txt");
 
   // save the initial value of trenos
   int initial_trenos = opt.allTrenos_.size();
-
   auto startH = chrono::high_resolution_clock::now();
-
   int solucaoHeuristica = opt.heuristic();
-
-
   auto finishH = chrono::high_resolution_clock::now();
 
   chrono::duration<double> elapsedH = finishH - startH;
@@ -73,9 +70,7 @@ int main(void) {
   cout << "Quantidade de trenos após o algortimo: " << solucaoHeuristica << endl;
 
   auto startVND = chrono::high_resolution_clock::now();
-
   int solutionVND = opt.vnd();
-
   auto finishVND = chrono::high_resolution_clock::now();
 
   chrono::duration<double> elapsedVND = finishVND - startVND;
@@ -87,9 +82,7 @@ int main(void) {
 
 
   auto start = chrono::high_resolution_clock::now();
-
   int solution = opt.ils();
-
   auto finish = chrono::high_resolution_clock::now();
 
   chrono::duration<double> elapsed = finish - start;
