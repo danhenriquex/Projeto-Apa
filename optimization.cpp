@@ -292,37 +292,45 @@ int Optimization::vnd(void) {
 
 void Optimization::perturbation(void) {
 
+  // escolhe um presente aleatorio e um treno
   int randomGift = rand() % this->allGifts_.size();
   int randomTreno = rand() % this->allTrenos_.size();
 
+  // escolhe um treno aleatorio pra receber o presente
   int randomTreno2 = rand() % this->allTrenos_.size();
 
+  // verifica se o treno tem capacidade pra receber o presente
   if (this->allTrenos_[randomTreno2].capacity_ - this->allGifts_[randomGift].weight_ >= 0) {
 
     for (auto& gift : this->allTrenos_[randomTreno].gifts_) {
-      if (gift == randomGift) {
 
+      // verifica se o presente aleatorio esta no treno aleatorio
+      if (gift == randomGift) {
+        // verifica se o presente esta no treno que vai receber
         for (auto& gift2 : this->allTrenos_[randomTreno2].gifts_) {
           if (gift2 == randomGift) {
             return;
           }
         }
-
+        // verifica se o presente nao esta na lista de nao permitidos
         for (auto& notAllowed : this->allGifts_[randomGift].notAllowedPresents_) {
           if (notAllowed == this->allGifts_[randomGift].id_) {
             return;
           }
         }
 
-        // remove the gift from the treno
+        // remove o presente do treno
         this->allTrenos_[randomTreno].remove_gift(this->allGifts_[randomGift]);
 
-        // add the gift to the treno
+        // adiciona o presente no treno novo
         this->allTrenos_[randomTreno2].add_gift(this->allGifts_[randomGift]);
       }
     }
   }
 
+  /*
+    apaga todos o presentes repetidos e adiciona o id do treno que o presente esta
+  */
   for (auto& treno : this->allTrenos_) {
     for (auto& gift : treno.gifts_) {
       if (this->allGifts_[gift].idTreno_ == -1) {

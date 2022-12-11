@@ -56,12 +56,12 @@ int main(void) {
   auto opt = readFile("./instancias/instances/n30_k150_A.txt");
 
   // opt.papaiNoel();
-  cout << opt.allTrenos_.size() << endl;
+  cout << "Trenos: " << opt.allTrenos_.size() << endl;
   int solution = opt.ils();
 
-  // for (auto& treno : opt.allTrenos_) {
-  //   cout << treno;
-  // }
+  for (auto& treno : opt.allTrenos_) {
+    cout << treno;
+  }
   cout << "Trenos: " << solution << endl;
 
   return 0;
