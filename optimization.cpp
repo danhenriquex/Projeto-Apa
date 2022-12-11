@@ -80,9 +80,6 @@ int Optimization::heuristic(void) {
     }
 
   }
-
-  this->removeAllTrenosEmpty();
-
   return 0;
 
 }
@@ -144,11 +141,13 @@ void Optimization::QuickSort(int inicio, int fim) {
 
 int Optimization::reinsertion(void) {
 
-  Treno trenoMinGifts = this->allTrenos_[0];
+  vector<Treno> trenos = this->allTrenos_;
+
+  Treno trenoMinGifts = trenos[0];
   int minGifts = trenoMinGifts.gifts_.size();
   vector<int> gifts = trenoMinGifts.gifts_;
 
-  for (auto& treno : this->allTrenos_) {
+  for (auto& treno : trenos) {
     if (treno.gifts_.size() < minGifts && treno.gifts_.size() > 1) {
       minGifts = treno.gifts_.size();
       trenoMinGifts = treno;
@@ -157,7 +156,7 @@ int Optimization::reinsertion(void) {
   }
 
   for (auto& gift : gifts) {
-    for (auto& treno : this->allTrenos_) {
+    for (auto& treno : trenos) {
       if (treno.id_ != trenoMinGifts.id_) {
         if (treno.capacity_ - this->allGifts_[gift].weight_ >= 0 && !treno.is_empty()) {
 
@@ -185,7 +184,7 @@ int Optimization::reinsertion(void) {
           trenoMinGifts.gifts_.push_back(gift);
         }
       }
-      for (auto& treno : this->allTrenos_) {
+      for (auto& treno : trenos) {
         if (treno.id_ != trenoMinGifts.id_) {
           for (auto& gift2 : treno.gifts_) {
             if (gift == gift2) {
@@ -198,19 +197,161 @@ int Optimization::reinsertion(void) {
 
   }
   else {
-    this->allTrenos_.erase(this->allTrenos_.begin() + trenoMinGifts.id_);
+    trenos.erase(trenos.begin() + trenoMinGifts.id_);
   }
 
-  int i = 0;
-  while (i < this->allTrenos_.size()) {
-    if (this->allTrenos_[i].is_empty()) {
-      this->allTrenos_.erase(this->allTrenos_.begin() + i);
-      i = 0;
+  return trenos.size();
+
+}
+
+int Optimization::mergeTrenos(void) {
+
+  vector<Treno> trenos = this->allTrenos_;
+
+  for (int i = 0; i < trenos.size(); ++i) {
+
+    for (int j = i; j < trenos.size(); ++j) {
+
+      if (i == j) continue;
+
+      const int treno1Capacity = this->trenoCapacity_ - trenos[i].capacity_;
+      const int treno2Capacity = this->trenoCapacity_ - trenos[j].capacity_;
+      const int trenoSum = treno1Capacity + treno2Capacity;
+      bool allowed = false;
+
+      if (trenoSum <= this->trenoCapacity_) {
+        allowed = true;
+        for (auto& gift1 : trenos[i].gifts_) {
+          for (auto& gift2 : trenos[j].gifts_) {
+            for (auto& notAllowed : this->allGifts_[gift1].notAllowedPresents_) {
+              if (notAllowed == this->allGifts_[gift2].id_) {
+                allowed = false;
+              }
+            }
+          }
+        }
+
+        if (allowed) {
+          for (auto& gift : trenos[j].gifts_) {
+            trenos[i].add_gift(this->allGifts_[gift]);
+          }
+
+          int value = trenos[j].gifts_.size();
+
+          for (int k = 0; k < value; ++k) {
+            trenos[j].gifts_.pop_back();
+          }
+        }
+      }
+    }
+  }
+
+  this->removeAllTrenosEmpty();
+
+  return trenos.size();
+}
+
+int Optimization::vnd(void) {
+
+  this->papaiNoel();
+
+  int k = 1;
+  int r = 2;
+
+  int best = this->allTrenos_.size();
+  int current = best;
+
+  while (k <= r) {
+
+    switch (k)
+    {
+    case 1:
+      current = this->mergeTrenos();
+      break;
+
+    case 2:
+      current = this->reinsertion();
+      break;
+    }
+
+    if (current < best) {
+      best = current;
+      k = 1;
     }
     else {
-      i++;
+      k++;
+    }
+
+  }
+
+  this->removeAllTrenosEmpty();
+
+  return best;
+
+}
+
+void Optimization::perturbation(void) {
+
+  int randomGift = rand() % this->allGifts_.size();
+  int randomTreno = rand() % this->allTrenos_.size();
+
+  int randomTreno2 = rand() % this->allTrenos_.size();
+
+  if (this->allTrenos_[randomTreno2].capacity_ - this->allGifts_[randomGift].weight_ >= 0) {
+
+    for (auto& gift : this->allTrenos_[randomTreno].gifts_) {
+      if (gift == randomGift) {
+
+        for (auto& gift2 : this->allTrenos_[randomTreno2].gifts_) {
+          if (gift2 == randomGift) {
+            return;
+          }
+        }
+
+        for (auto& notAllowed : this->allGifts_[randomGift].notAllowedPresents_) {
+          if (notAllowed == this->allGifts_[randomGift].id_) {
+            return;
+          }
+        }
+
+        // remove the gift from the treno
+        this->allTrenos_[randomTreno].remove_gift(this->allGifts_[randomGift]);
+
+        // add the gift to the treno
+        this->allTrenos_[randomTreno2].add_gift(this->allGifts_[randomGift]);
+      }
     }
   }
 
-  return this->allTrenos_.size();
+  for (auto& treno : this->allTrenos_) {
+    for (auto& gift : treno.gifts_) {
+      if (this->allGifts_[gift].idTreno_ == -1) {
+        this->allGifts_[gift].idTreno_ = treno.id_;
+      }
+      else if (this->allGifts_[gift].idTreno_ != treno.id_) {
+        treno.remove_gift(this->allGifts_[gift]);
+      }
+    }
+  }
+
+}
+
+int Optimization::ils(void) {
+
+  int best = this->allTrenos_.size();
+  int current = best;
+
+  for (int i = 0; i < 25000; ++i) {
+
+    current = this->vnd();
+
+    if (current < best) {
+      best = current;
+    }
+    else {
+      this->perturbation();
+    }
+  }
+
+  return best;
 }

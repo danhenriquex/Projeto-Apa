@@ -55,26 +55,17 @@ int main(void) {
 
   auto opt = readFile("./instancias/instances/n30_k150_A.txt");
 
-  opt.papaiNoel();
+  // opt.papaiNoel();
+  cout << opt.allTrenos_.size() << endl;
+  int solution = opt.ils();
 
-  cout << "Quantidade de trenos inicial: " << opt.allTrenos_.size() << endl;
-  int inital_size = opt.allTrenos_.size();
-  int first_reinsertion = opt.reinsertion();
-
-  while (true) {
-    inital_size = first_reinsertion;
-    first_reinsertion = opt.reinsertion();
-
-    if (inital_size == first_reinsertion) {
-      break;
-    }
-  }
-
-  for (auto& treno : opt.allTrenos_) {
-    cout << treno;
-  }
-
-  cout << "Quantidade de trenos depois do re-insertion: " << opt.allTrenos_.size() << endl;
+  // for (auto& treno : opt.allTrenos_) {
+  //   cout << treno;
+  // }
+  cout << "Trenos: " << solution << endl;
 
   return 0;
+
 }
+
+

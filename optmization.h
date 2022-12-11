@@ -23,10 +23,18 @@ public:
   void showTrenoGifts(void);
   void showSortedPresents(void);
 
+
   void QuickSort(int inicio, int fim);
   // list<Treno> swap_gifts(void);
   int reinsertion(void);
   void removeAllTrenosEmpty(void);
+  list<Treno> swap_gifts(void);
+  int mergeTrenos(void);
+
+  int vnd(void);
+
+  void perturbation(void);
+  int ils(void);
 };
 
 #endif

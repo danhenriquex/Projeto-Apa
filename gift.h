@@ -22,7 +22,7 @@ public:
   bool isIn_;
 
   friend std::ostream& operator<<(std::ostream& os, const Gift& gift) {
-    os << "Presente " << gift.id_ << std::endl;
+    os << "Presente " << gift.id_ + 1 << std::endl;
     os << "weight: " << gift.weight_ << std::endl;
     os << "is in: " << (gift.isIn_ ? "Sim" : "Nao") << std::endl;
     os << "idTreno: " << gift.idTreno_ << std::endl;
