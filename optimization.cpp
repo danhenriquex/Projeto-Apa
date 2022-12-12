@@ -388,9 +388,5 @@ int Optimization::ils(void) {
     }
   }
 
-  for (auto& treno : this->allTrenos_) {
-    cout << treno;
-  }
-
   return best;
 }
