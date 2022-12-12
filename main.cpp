@@ -53,10 +53,9 @@ int main(void) {
     return opt;
   };
 
-  // auto opt = readFile("./instancias/instances/n120_k150_B.txt");
-  auto opt = readFile("./instancias/instancias_grandes/n1000_k200_B.txt");
+  auto opt = readFile("./instancias/instances/n120_k150_B.txt");
+  // auto opt = readFile("./instancias/instancias_grandes/n1000_k200_B.txt");
 
-  // save the initial value of trenos
   int initial_trenos = opt.allTrenos_.size();
   auto startH = chrono::high_resolution_clock::now();
   int solucaoHeuristica = opt.heuristic();
